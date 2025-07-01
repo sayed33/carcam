@@ -1,8 +1,6 @@
 from pathlib import Path
 import os
 import dj_database_url
-
-# Cloudinary
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -28,7 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-# Cloudinary settings
+# Cloudinary settings for media files
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dzn2vthfn',
@@ -36,16 +34,16 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': '-s520ao3ATq6zECp-T59Ts2zH-c',
 }
 
-# Static files
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'camera' / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'camera' / 'static']  # مكان ملفات static أثناء التطوير
+STATIC_ROOT = BASE_DIR / 'staticfiles'               # مكان جمع ملفات static عند collectstatic
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # يجب أن يكون بعد SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -59,7 +57,7 @@ ROOT_URLCONF = 'carcam.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [],  # إذا عندك مجلد قوالب خاص ممكن تضيفه هنا
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,7 +74,11 @@ WSGI_APPLICATION = 'carcam.wsgi.application'
 
 # Database
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600)
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600,
+        # حذف ssl_require=True لتجنب الخطأ مع SQLite
+    )
 }
 
 # Password validation
@@ -101,4 +103,5 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
