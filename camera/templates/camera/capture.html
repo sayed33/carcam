@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التقاط صور السيارات</title>
+    <style>
+        :root {
+            --main-color: #004080;
+            --accent-color: #f68c1f;
+            --bg-color: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header img {
+            height: 70px;
+        }
+
+        h1 {
+            color: var(--main-color);
+            margin-top: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+
+        input, button, select {
+            padding: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 8px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        video {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 12px;
+            border: 3px solid var(--main-color);
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e67e0f;
+        }
+
+        .images-preview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .images-preview img {
+            width: 90px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        @media (max-width: 600px) {
+            input, button, select {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="{% static 'logo.png' %}" alt="شعار المكتب">
+    <h1>نظام تصوير سيارات التأجير</h1>
+</header>
+
+<main>
+    <label for="car_type">نوع السيارة:</label>
+    <input type="text" id="car_type" placeholder="مثال: تويوتا كورولا">
+
+    <label for="car_number">رقم السيارة:</label>
+    <input type="text" id="car_number" placeholder="مثال: 1234 ع م ج">
+
+    <label for="cameraSelect">اختر الكاميرا:</label>
+    <select id="cameraSelect"></select>
+
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+
+    <button onclick="captureImage()">📸 التقاط صورة</button>
+    <p>(يمكنك التقاط حتى 8 صور)</p>
+
+    <div class="images-preview" id="captured-images"></div>
+
+    <button onclick="uploadImages()">📤 حفظ الصور</button>
+</main>
+
+<footer>
+    &copy; 2025 مكتب الرواد لتأجير السيارات - جميع الحقوق محفوظة
+</footer>
+
+<script>
+    let video = document.getElementById('video');
+    let canvas = document.getElementById('canvas');
+    let context = canvas.getContext('2d');
+    let capturedImages = [];
+    let cameraSelect = document.getElementById('cameraSelect');
+    let currentStream;
+
+    function getCameras() {
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+            cameraSelect.innerHTML = "";
+            devices.forEach(device => {
+                if (device.kind === 'videoinput') {
+                    let option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `كاميرا ${cameraSelect.length + 1}`;
+                    cameraSelect.appendChild(option);
+                }
+            });
+        });
+    }
+
+    function startCamera(deviceId = null) {
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+
+        let constraints = {
+            video: deviceId ? { deviceId: { exact: deviceId } } : { facingMode: "environment" },
+            audio: false
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+            currentStream = stream;
+            video.srcObject = stream;
+        }).catch(err => {
+            alert("⚠️ تعذر تشغيل الكاميرا: " + err.message);
+        });
+    }
+
+    cameraSelect.addEventListener('change', () => {
+        startCamera(cameraSelect.value);
+    });
+
+    getCameras();
+    startCamera(); // يبدأ بكاميرا environment أولاً
+
+    function captureImage() {
+        if (capturedImages.length >= 8) {
+            alert("لقد التقطت 8 صور بالفعل.");
+            return;
+        }
+
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(blob => {
+            capturedImages.push(blob);
+            let img = document.createElement('img');
+            img.src = URL.createObjectURL(blob);
+            document.getElementById('captured-images').appendChild(img);
+        }, 'image/jpeg');
+    }
+
+    function uploadImages() {
+        let carType = document.getElementById('car_type').value.trim();
+        let carNumber = document.getElementById('car_number').value.trim();
+
+        if (!carType || !carNumber || capturedImages.length === 0) {
+            alert("يرجى إدخال البيانات والتقاط الصور.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append('car_type', carType);
+        formData.append('car_number', carNumber);
+
+        capturedImages.forEach((img, i) => {
+            formData.append('images[]', img, `image_${i}.jpg`);
+        });
+
+        fetch('', {
+            method: 'POST',
+            body: formData
+        }).then(res => res.json())
+          .then(data => {
+            if (data.status === 'success') {
+                alert("✅ تم حفظ الصور بنجاح.");
+                location.reload();
+            } else {
+                alert("❌ فشل في الحفظ.");
+            }
+        }).catch(() => {
+            alert("⚠️ حدث خطأ أثناء رفع الصور.");
+        });
+    }
+</script>
+
+</body>
+</html>
