@@ -9,6 +9,7 @@ from datetime import datetime
 import os
 from django.core.files.base import ContentFile
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 
 
 @csrf_exempt
