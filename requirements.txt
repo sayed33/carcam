@@ -17,3 +17,4 @@ python-dotenv==1.0.1
 sqlparse==0.5.1
 tzdata==2024.1
 virtualenv==20.27.0
+dj-database-url==2.1.0
