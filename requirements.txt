@@ -20,3 +20,5 @@ virtualenv==20.27.0
 dj-database-url
 gunicorn
 whitenoise
+cloudinary
+django-cloudinary-storage
