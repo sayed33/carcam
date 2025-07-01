@@ -8,6 +8,8 @@ import base64
 from datetime import datetime
 import os
 from django.core.files.base import ContentFile
+from django.contrib.auth.models import User
+
 
 @csrf_exempt
 def camera_page(request):
@@ -22,3 +24,8 @@ def camera_page(request):
         return JsonResponse({'status': 'success'})
 
     return render(request, 'camera/capture.html')
+def create_admin_user(request):
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser("admin", "admin@example.com", "admin123")
+        return HttpResponse("Superuser created")
+    return HttpResponse("Superuser already exists")
