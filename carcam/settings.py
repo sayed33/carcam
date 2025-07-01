@@ -5,15 +5,19 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
+# المسار الأساسي للمشروع
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# سر المشروع
 SECRET_KEY = 'django-insecure-ynat))ntgvxj7rkmf7g5fz7nm-cooh_h$a^4lun=ufc5r1c*r9'
 
+# لا تفعّل DEBUG في الإنتاج
 DEBUG = False
 
+# الهوستات المسموح بها
 ALLOWED_HOSTS = ['carcam-s9l5.onrender.com', 'localhost', '127.0.0.1']
 
-# Installed apps
+# التطبيقات المثبتة
 INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
@@ -26,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-# Cloudinary settings for media files
+# إعدادات Cloudinary للصور/الملفات
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dzn2vthfn',
@@ -34,16 +38,18 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': '-s520ao3ATq6zECp-T59Ts2zH-c',
 }
 
-# Static files (CSS, JavaScript, Images)
+# إعدادات ملفات static
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'camera' / 'static']  # مكان ملفات static أثناء التطوير
-STATIC_ROOT = BASE_DIR / 'staticfiles'               # مكان جمع ملفات static عند collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # سيجمع الملفات هنا عند collectstatic
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Middleware
+# لو عندك ملفات static مخصصة في مجلد معين، فعل السطر ده:
+# STATICFILES_DIRS = [BASE_DIR / 'camera' / 'static']
+
+# إعدادات Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # يجب أن يكون بعد SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # لخدمة static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -52,12 +58,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# إعدادات URLs
 ROOT_URLCONF = 'carcam.urls'
 
+# إعدادات القوالب
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # إذا عندك مجلد قوالب خاص ممكن تضيفه هنا
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,18 +78,18 @@ TEMPLATES = [
     },
 ]
 
+# WSGI
 WSGI_APPLICATION = 'carcam.wsgi.application'
 
-# Database
+# إعدادات قاعدة البيانات
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
         conn_max_age=600,
-        # حذف ssl_require=True لتجنب الخطأ مع SQLite
     )
 }
 
-# Password validation
+# تحقق كلمات المرور
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -97,11 +105,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
+# إعدادات اللغة والوقت
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Default primary key field type
+# نوع الـ primary key الافتراضي
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
