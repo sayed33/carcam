@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-ynat))ntgvxj7rkmf7g5fz7nm-cooh_h$a^4lun=ufc5r1c*r9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.104', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['carcam-s9l5.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
