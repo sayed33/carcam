@@ -31,7 +31,7 @@ CLOUDINARY_STORAGE = {
     'API_KEY': os.getenv('CLOUDINARY_API_KEY', '876612625865211'),
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', '-s520ao3ATq6zECp-T59Ts2zH-c'),
 }
-
+STATICFILES_DIRS = [BASE_DIR / 'camera' / 'static']
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
