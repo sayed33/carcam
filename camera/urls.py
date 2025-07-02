@@ -10,7 +10,7 @@ from .views import create_admin_user
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    
     path('', views.camera_page, name='camera_page'),
     path("create-admin/", create_admin_user),
 
