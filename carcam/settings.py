@@ -43,7 +43,7 @@ CLOUDINARY_STORAGE = {
 # ملفات static
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'camera' / 'static']
+#STATICFILES_DIRS = [BASE_DIR / 'camera' / 'static']
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # لتأكد من العثور على ملفات static
