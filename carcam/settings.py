@@ -73,11 +73,12 @@ WSGI_APPLICATION = 'carcam.wsgi.application'
 # قاعدة البيانات مع دعم SSL (يمكن التعديل على ssl_require حسب الحاجة)
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
         conn_max_age=600,
-        ssl_require=True,  # اجعلها True إذا قاعدة البيانات تطلب SSL، أو False إذا لا تحتاج
+        ssl_require=False,  # SQLite doesn't use SSL
     )
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
