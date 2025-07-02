@@ -10,7 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # الأمن وبيئة التشغيل
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-...')
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS','hamdicrypto.pythonanywhere.com', 'carcam-s9l5.onrender.com,localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    'hamdicrypto.pythonanywhere.com,carcam-s9l5.onrender.com,localhost,127.0.0.1'
+).split(',')
+
 
 # التطبيقات
 INSTALLED_APPS = [
