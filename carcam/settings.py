@@ -4,6 +4,9 @@ import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import django
+django.setup()
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
