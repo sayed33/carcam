@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import dj_database_url
 import cloudinary
 import cloudinary.uploader
@@ -6,11 +7,11 @@ import cloudinary.api
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-...'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-...')
 
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = ['carcam-s9l5.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'carcam-s9l5.onrender.com,localhost,127.0.0.1').split(',')
 
 INSTALLED_APPS = [
     'cloudinary',
@@ -26,13 +27,10 @@ INSTALLED_APPS = [
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dzn2vthfn',
-    'API_KEY': '876612625865211',
-    'API_SECRET': '-s520ao3ATq6zECp-T59Ts2zH-c',
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'dzn2vthfn'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY', '876612625865211'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', '-s520ao3ATq6zECp-T59Ts2zH-c'),
 }
-
-# ⚠️ لا تضع STATICFILES_DIRS لو ما عندك ملفات static خاصة بك
-# STATICFILES_DIRS = [BASE_DIR / 'camera' / 'static']
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -72,10 +70,12 @@ TEMPLATES = [{
 
 WSGI_APPLICATION = 'carcam.wsgi.application'
 
+# قاعدة البيانات مع دعم SSL (يمكن التعديل على ssl_require حسب الحاجة)
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        default=os.getenv('DATABASE_URL'),
         conn_max_age=600,
+        ssl_require=True,  # اجعلها True إذا قاعدة البيانات تطلب SSL، أو False إذا لا تحتاج
     )
 }
 
