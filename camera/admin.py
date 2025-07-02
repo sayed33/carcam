@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import CarCapture
 from django.utils.html import format_html
+from django.conf.urls.static import static
+
 
 @admin.register(CarCapture)
 class CarCaptureAdmin(admin.ModelAdmin):
